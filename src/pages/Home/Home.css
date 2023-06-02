@@ -1,0 +1,11 @@
+.products-grid {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    background-color: rgb(246, 242, 236);
+}
+
+.products-grid div {
+    margin: 20px;
+}
