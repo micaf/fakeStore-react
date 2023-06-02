@@ -1,13 +1,14 @@
 import './App.css'
 import NavBar from './components/NavBar/NavBar'
-import Home from './pages/Home/Home'
+import ItemListContainer from './components/ItemListContainer/ItemListContainer'
+import Products from './products.json';
 
 function App() {
 
   return (
     <>
       <NavBar></NavBar>
-      <Home></Home>
+      <ItemListContainer products={Products}></ItemListContainer>
     </>
   )
 }

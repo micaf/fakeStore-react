@@ -2,7 +2,7 @@ import React from "react";
 //import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-const ShoppingCart = () => {
+const CartWidget = () => {
   return (
     <div style={{ display: "flex", alignItems: "center", width: "40px" }}>
       <ShoppingCartIcon sx={{ color: "white" }} />
@@ -11,4 +11,4 @@ const ShoppingCart = () => {
   );
 };
 
-export default ShoppingCart;
+export default CartWidget;

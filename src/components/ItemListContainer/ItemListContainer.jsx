@@ -1,13 +1,11 @@
-import products from '../../products.json';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
-import './Home.css'
+import './ItemListContainer.css'
 
-function Home() {
-
+function ItemListContainer({products}) {
     return (
         <>
             <div className="products-grid">
@@ -38,4 +36,4 @@ function Home() {
     )
 }
 
-export default Home
+export default ItemListContainer

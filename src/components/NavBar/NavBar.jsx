@@ -1,4 +1,4 @@
-import ShoppingCart from "../ShoppingCart/ShoppingCart"
+import CartWidget from '../CartWidget/CartWidget';
 import Logo from '../../assets/store-svg.svg'
 import './NavBar.css';
 
@@ -23,7 +23,7 @@ function NavBar() {
                         Contact
                     </a>
                     <a href="/" id="Cart">
-                        <ShoppingCart />
+                        <CartWidget />
                     </a>
                 </div>
             </nav>
