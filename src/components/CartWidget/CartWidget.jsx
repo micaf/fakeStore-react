@@ -1,5 +1,5 @@
 import React from "react";
-//import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
+
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const CartWidget = () => {

@@ -1,13 +1,9 @@
-.products-grid {
+.product-container {
     display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
     background-color: rgb(246, 242, 236);
     width: 100vw;
     min-height: 100vh;
-}
-
-.products-grid div {
-    margin: 20px;
 }

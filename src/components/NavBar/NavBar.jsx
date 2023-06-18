@@ -1,8 +1,42 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+import axios from "axios";
 import CartWidget from '../CartWidget/CartWidget';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
 import Logo from '../../assets/store-svg.svg'
 import './NavBar.css';
 
+
 function NavBar() {
+
+    const [categories, setCategories] = useState([]);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const upperFirstLetter = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    useEffect(() => {
+        axios(`${import.meta.env.VITE_BASE_URL}/products/categories`).then((json) =>
+            setCategories(json.data)
+        );
+    }, []);
+
+
     return (
         <>
             <nav className="navbar">
@@ -13,15 +47,33 @@ function NavBar() {
                     <span>FAKE STORE</span>
                 </div>
                 <div className="links">
-                    <a href="/" id="ShopLink">
-                        Shop
+                    <a aria-controls={open ? 'basic-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick} id="ShopLink">
+                        Categories
                     </a>
-                    <a href="/" id="About-Us">
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        {categories.map((category, index) => <MenuItem key={index}><Link to={`/category/${category}`} style={{ textDecoration: 'none' }}>
+                            {upperFirstLetter(category)}
+                        </Link></MenuItem>)}
+
+
+                    </Menu>
+                    <Link id="About-Us" to="/about">
                         About Us
-                    </a>
-                    <a href="/" id="Contact">
+                    </Link>
+                    <Link id="Contact" to="/contact">
                         Contact
-                    </a>
+                    </Link>
                     <a href="/" id="Cart">
                         <CartWidget />
                     </a>
