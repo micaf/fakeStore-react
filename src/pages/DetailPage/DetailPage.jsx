@@ -1,17 +1,25 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+
+import { CartContext } from '../../context/CartContext'
 
 import axios from "axios";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
+import {
+  CardHeader,
+  CardActions,
+  IconButton,
+  Typography,
+  CardMedia,
+  CardContent,
+  Card
+} from "@mui/material";
+import  AddIcon  from '@mui/icons-material/Add';
+import  FavoriteIcon  from '@mui/icons-material/Favorite';
 
 import './DetailPage.css'
 
-function DetailPage() {
 
+function DetailPage() {
   const [product, setProduct] = useState({});
 
   let { id } = useParams();
@@ -27,22 +35,27 @@ function DetailPage() {
     <>
       <div className="product-container">
         <Card sx={{ maxWidth: 400, margin: 10, padding: 10 }}>
-          <CardActionArea>
-            <CardMedia component="img" image={product.image} alt="product image" sx={{ height: 100, width: "auto", margin: "auto", marginTop: 2 }} />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {product.title}
-              </Typography>
-              <Typography variant="body4" color="text.secondary">
-                {product.description}
-              </Typography>
-              <br></br>
-              <br></br>
-              <Typography variant="body4" color="text.secondary">
-                <b>${product.price}</b>
-              </Typography>
-            </CardContent>
-          </CardActionArea>
+          <CardHeader
+            title={product.title}
+            subheader={`$ ${product.price}`}
+          />
+          <CardMedia component="img" image={product.image} alt="product image" sx={{ height: 100, width: "auto", margin: "auto", marginTop: 2 }} />
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              {product.description}
+            </Typography>
+          </CardContent>
+          <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites">
+              <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="share">
+              <ShareIcon />
+            </IconButton>
+            <IconButton aria-label="add to cart">
+              <AddIcon />
+            </IconButton>
+          </CardActions>
         </Card>
       </div>
 

@@ -2,12 +2,21 @@
     display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    background-color: rgb(246, 242, 236);
+    justify-content: center;
+    background-color: #FAFAFA;
     width: 100vw;
     min-height: 100vh;
 }
 
-.products-grid div {
-    margin: 20px;
+
+.options-container {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.information-container {
+    height: 35px;
 }

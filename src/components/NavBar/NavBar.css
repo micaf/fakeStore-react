@@ -1,7 +1,7 @@
 .navbar {
-    background-color: black;
+    background-color: #DE3A3B;
     width: 100%;
-    height: 50px;
+    height: 90px;
     color: white;
     display: inline-flex;
     flex-direction: row;
@@ -13,12 +13,19 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #EEE7ED;
+    border-radius: 60%;
+    height: 55%;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    border: 3px dotted #40596B
 }
 
 .navbar .logo span {
     font-size: 12px;
     font-weight: bold;
-    cursor: none;
+    color: #DA555D
 }
 
 .links {

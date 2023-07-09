@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Logo from '../../assets/store-svg.svg'
 import './NavBar.css';
 
+import { upperFirstLetter } from '../../shared/Utils'
 
 function NavBar() {
 
@@ -26,10 +27,6 @@ function NavBar() {
         setAnchorEl(null);
     };
 
-    const upperFirstLetter = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
     useEffect(() => {
         axios(`${import.meta.env.VITE_BASE_URL}/products/categories`).then((json) =>
             setCategories(json.data)
@@ -39,12 +36,12 @@ function NavBar() {
 
     return (
         <>
-            <nav className="navbar">
+            <nav className="navbar" fixed='top'>
                 <div className="logo">
                     <a href="/" id="NavLogo">
                         <img src={Logo} alt="Fake Logo" width="30" height="20"></img>
                     </a>
-                    <span>FAKE STORE</span>
+                    <span>Fake Store</span>
                 </div>
                 <div className="links">
                     <a aria-controls={open ? 'basic-menu' : undefined}
