@@ -1,8 +1,8 @@
 .navbar {
-    background-color: #DE3A3B;
+    background-color: #ffffff;
     width: 100%;
     height: 90px;
-    color: white;
+    color: rgb(0, 0, 0);
     display: inline-flex;
     flex-direction: row;
     justify-content: space-around;
@@ -13,25 +13,25 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #EEE7ED;
+    background-color: #ffffff;
     border-radius: 60%;
     height: 55%;
     padding: 10px;
     margin: 5px;
     cursor: pointer;
-    border: 3px dotted #40596B
+    border: 5px solid #000000
 }
 
 .navbar .logo span {
     font-size: 12px;
     font-weight: bold;
-    color: #DA555D
+    color: #000000
 }
 
 .links {
     display: inline-flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 80%;
     align-items: center;
 
@@ -39,11 +39,22 @@
 }
 
 .links a {
-    color: white !important;
+    color: rgb(0, 0, 0) !important;
     text-decoration: none;
     transition: .3s;
+    margin-right: 20px;
+    cursor: pointer;
 }
 
 .links a:hover {
     text-decoration: underline;
+}
+
+.cart{
+    display: inline-flex;
+    align-items: center;
+}
+
+.cart a{
+    color: rgb(0, 0, 0) !important;
 }

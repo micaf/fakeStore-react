@@ -1,22 +1,19 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
 
-import ItemListContainer from '../../components/ItemListContainer/ItemListContainer'
-
-import Products from '../../products.json'
 import { Typography } from "@mui/material";
 
 import banner from '../../assets/banner.mp4'
+import women from '../../assets/women.mp4'
+import men from '../../assets/men.mp4'
+import electronics from '../../assets/electronics.mp4'
+import jewelry from '../../assets/jewelry.mp4'
 
 import './HomePage.css'
 
 function HomePage() {
 
-    const [products, setProducts] = useState(Products);
-
-    let { category } = useParams();
 
     // useEffect(() => {
     //     if (category) {
@@ -30,15 +27,42 @@ function HomePage() {
 
     // }, [category]);
 
-
     return (
-        <div className="home-container">
-            <div className="banner-container">
-                <video autoPlay loop muted id="banner"><source src={banner} type="video/mp4"></source></video>
+        <>
+            <div className="home-container">
+                <div className="banner-container">
+                    <video autoPlay loop muted id="banner"><source src={banner} type="video/mp4"></source></video>
+                </div>
+                <Typography sx={{ fontSize: 'h5.fontSize', fontWeight: 'bold', marginLeft: 20 }}>CATEGORIES</Typography>
+                <div className="categories">
+                    <Link to={`/category/women`}>
+                        <video autoPlay loop muted id="women">
+                            <source src={women} type="video/mp4"></source>
+                        </video>
+                    </Link>
+                    <Link to={`/category/men`}>
+                        <video autoPlay loop muted id="men"><source src={men} type="video/mp4"></source></video>
+                    </Link>
+
+
+
+                </div>
+                <div className="categories">
+                    <Link to={`/category/electronics`}>
+                        <video autoPlay loop muted id="electronics"><source src={electronics} type="video/mp4"></source></video>
+                    </Link>
+                    <Link to={`/category/jewelry`}>
+                        <video autoPlay loop muted id="jewelry"><source src={jewelry} type="video/mp4"></source></video>
+                    </Link>
+
+
+
+                </div>
+
             </div>
-            <Typography sx={{ fontSize: 'h5.fontSize', fontStyle: 'oblique', fontFamily: 'Monospace', padding: 2, fontWeight: 'bold', marginLeft: 20 }}>ALL PRODUCTS [{products.length}]</Typography>
-            <ItemListContainer products={products}></ItemListContainer>
-        </div>
+        </>
+
+
     )
 }
 

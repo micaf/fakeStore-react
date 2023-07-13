@@ -5,14 +5,13 @@ import axios from "axios";
 import CartWidget from '../CartWidget/CartWidget';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
 import Logo from '../../assets/store-svg.svg'
 import './NavBar.css';
 
 import { upperFirstLetter } from '../../shared/Utils'
+import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
 
 function NavBar() {
-
     const [categories, setCategories] = useState([]);
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -36,12 +35,11 @@ function NavBar() {
 
     return (
         <>
-            <nav className="navbar" fixed='top'>
+            <nav className="navbar">
                 <div className="logo">
                     <a href="/" id="NavLogo">
-                        <img src={Logo} alt="Fake Logo" width="30" height="20"></img>
+                        <StoreMallDirectoryIcon sx={{ width: '60px', height: '40px', color: '#000000' }} />
                     </a>
-                    <span>Fake Store</span>
                 </div>
                 <div className="links">
                     <a aria-controls={open ? 'basic-menu' : undefined}
@@ -57,20 +55,28 @@ function NavBar() {
                         onClose={handleClose}
                         MenuListProps={{
                             'aria-labelledby': 'basic-button',
-                        }}
+                            style: { minWidth: '100vw', display: 'inline-flex',flexDirection:'row', justifyContent:'space-around' },
+                          }}
+                          getContentAnchorEl={null}
+                          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                          anchorPosition={ {top: 160, left: 0 }}
+                          sx={{top:'40px',}}
                     >
-                        {categories.map((category, index) => <MenuItem key={index}><Link to={`/category/${category}`} style={{ textDecoration: 'none' }}>
+                        {categories.map((category, index) => <MenuItem key={index}><Link to={`/category/${category}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                             {upperFirstLetter(category)}
                         </Link></MenuItem>)}
 
 
                     </Menu>
-                    <Link id="About-Us" to="/about">
-                        About Us
+                    <Link id="Shop" to="/about">
+                        Shop
                     </Link>
                     <Link id="Contact" to="/contact">
                         Contact
                     </Link>
+                </div>
+                <div className="cart">
                     <a href="/" id="Cart">
                         <CartWidget />
                     </a>
