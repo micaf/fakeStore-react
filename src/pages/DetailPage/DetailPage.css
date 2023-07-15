@@ -6,3 +6,7 @@
     width: 100vw;
     min-height: 100vh;
 }
+
+.margin-10 {
+    margin-bottom: 10px;
+}

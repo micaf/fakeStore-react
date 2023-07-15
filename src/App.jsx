@@ -23,14 +23,15 @@ function App() {
             <NavBar />
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<ShopPage />} />
+              <Route path="/shop" element={<ShopPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/detail/:id" element={<DetailPage />} />
               <Route path="/category/:category/detail/:id" element={<DetailPage />} />
               <Route path="/category/:category" element={<ShopPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="*" element={<HomePage />} />
             </Routes>
-            <div className="footer"><span>Fuentes Micaela - 2023 (Fake Store)</span></div>
+            <div className="footer"><span>Fuentes Micaela - 2023 - Fake Store</span></div>
           </Router>
         </CartProvider>
       </div>

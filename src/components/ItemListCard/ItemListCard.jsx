@@ -25,7 +25,7 @@ const redirectButtonStyle = {
 function ItemListCard({ product }) {
     return (
         <>
-            <Card sx={{ maxWidth: 320, heigh: 500, width: 400, borderRadius: '16px', margin: 2 }}>
+            <Card sx={{ maxWidth: 320, height: 350, width: 400, borderRadius: '16px', margin: 2 }}>
                 <CardMedia component="img" image={product.image} alt="product image" sx={{ maxHeight: 150, width: "auto", margin: "auto", marginTop: 1, marginBottom: 2, padding:'20px' }} />
                 <CardContent sx={{ backgroundColor: '#FFFFFFF', borderRadius: '16px', height: '100%', borderTop: '#000000 solid 1px' }}>
                     <div className="information-container">

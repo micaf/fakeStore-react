@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 
-import axios from "axios";
-
 import { Typography } from "@mui/material";
 
 import banner from '../../assets/banner.mp4'
@@ -14,19 +12,6 @@ import './HomePage.css'
 
 function HomePage() {
 
-
-    // useEffect(() => {
-    //     if (category) {
-    //         axios(`${import.meta.env.VITE_BASE_URL}/products/category/${category}`).then((json) =>
-    //             setProducts(json.data))
-    //     } else {
-    //         axios(`${import.meta.env.VITE_BASE_URL}/products`).then((json) =>
-    //             setProducts(json.data)
-    //         );
-    //     }
-
-    // }, [category]);
-
     return (
         <>
             <div className="home-container">
@@ -35,12 +20,12 @@ function HomePage() {
                 </div>
                 <Typography sx={{ fontSize: 'h5.fontSize', fontWeight: 'bold', marginLeft: 20 }}>CATEGORIES</Typography>
                 <div className="categories">
-                    <Link to={`/category/women`}>
+                    <Link to={`/category/Women`}>
                         <video autoPlay loop muted id="women">
                             <source src={women} type="video/mp4"></source>
                         </video>
                     </Link>
-                    <Link to={`/category/men`}>
+                    <Link to={`/category/Men`}>
                         <video autoPlay loop muted id="men"><source src={men} type="video/mp4"></source></video>
                     </Link>
 
@@ -48,10 +33,10 @@ function HomePage() {
 
                 </div>
                 <div className="categories">
-                    <Link to={`/category/electronics`}>
+                    <Link to={`/category/Electronics`}>
                         <video autoPlay loop muted id="electronics"><source src={electronics} type="video/mp4"></source></video>
                     </Link>
-                    <Link to={`/category/jewelry`}>
+                    <Link to={`/category/Jewelry`}>
                         <video autoPlay loop muted id="jewelry"><source src={jewelry} type="video/mp4"></source></video>
                     </Link>
 

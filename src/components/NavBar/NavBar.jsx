@@ -1,22 +1,27 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState  } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import axios from "axios";
 import CartWidget from '../CartWidget/CartWidget';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Logo from '../../assets/store-svg.svg'
 import './NavBar.css';
 
 import { upperFirstLetter } from '../../shared/Utils'
 import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
+
+import { getCategories } from "../../service/firebaseService";
 
 function NavBar() {
     const [categories, setCategories] = useState([]);
 
     const [anchorEl, setAnchorEl] = useState(null);
 
+    const [isCheckoutPage, setIsCheckoutPage] = useState(false);
+
     const open = Boolean(anchorEl);
+
+    const location = useLocation();
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -27,10 +32,23 @@ function NavBar() {
     };
 
     useEffect(() => {
-        axios(`${import.meta.env.VITE_BASE_URL}/products/categories`).then((json) =>
-            setCategories(json.data)
-        );
-    }, []);
+
+        const getAllCategories = async () => {
+            const docs = await getCategories();
+            setCategories(docs);
+          };
+          getAllCategories();
+    
+        // axios(`${import.meta.env.VITE_BASE_URL}/products/categories`).then((json) =>
+        //    setCategories(json.data)
+        //  );
+   }, [categories]);
+
+
+
+    useEffect(() => {
+        setIsCheckoutPage(location.pathname === '/checkout');
+    }, [location]);
 
 
     return (
@@ -57,30 +75,30 @@ function NavBar() {
                             'aria-labelledby': 'basic-button',
                             style: { minWidth: '100vw', display: 'inline-flex',flexDirection:'row', justifyContent:'space-around' },
                           }}
-                          getContentAnchorEl={null}
+                          getcontentanchorel={null}
                           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                           anchorPosition={ {top: 160, left: 0 }}
                           sx={{top:'40px',}}
                     >
-                        {categories.map((category, index) => <MenuItem key={index}><Link to={`/category/${category}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        {categories.map((category, index) => <MenuItem key={index}><Link to={`/category/${category}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleClose}>
                             {upperFirstLetter(category)}
                         </Link></MenuItem>)}
 
 
                     </Menu>
-                    <Link id="Shop" to="/about">
+                    <Link id="Shop" to="/shop">
                         Shop
                     </Link>
                     <Link id="Contact" to="/contact">
                         Contact
                     </Link>
                 </div>
-                <div className="cart">
+                {!isCheckoutPage && (<div className="cart">
                     <a href="/" id="Cart">
                         <CartWidget />
                     </a>
-                </div>
+                </div>)}
             </nav>
         </>
     )

@@ -9,9 +9,9 @@ const ColorButton = styled(Button)(({ theme }) => ({
     },
   }));
 
-const StyledButton = ({text, onClick}) => {
+const StyledButton = ({text, onClick, disabled}) => {
     return(
-        <ColorButton onClick={onClick} variant="contained" sx={{ marginBottom: 4, borderRadius: '12px' }}>{text}</ColorButton>
+        <ColorButton onClick={onClick} variant="contained" sx={{ marginBottom: 4, borderRadius: '12px' }} disabled={disabled}>{text}</ColorButton>
     )
 }
 
