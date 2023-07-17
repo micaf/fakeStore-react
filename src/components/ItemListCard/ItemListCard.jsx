@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 import {
     CardActions,
@@ -6,8 +7,7 @@ import {
     CardMedia,
     CardContent,
     Card,
-    Tooltip,
-    Link
+    Tooltip
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -22,18 +22,22 @@ const redirectButtonStyle = {
 };
 
 
-function ItemListCard({ product }) {
+function ItemListCard({ product, handleAddProduct, isFavorite, handleFavorite }) {
     return (
         <>
             <Card sx={{ maxWidth: 320, height: 350, width: 400, borderRadius: '16px', margin: 2 }}>
-                <CardMedia component="img" image={product.image} alt="product image" sx={{ maxHeight: 150, width: "auto", margin: "auto", marginTop: 1, marginBottom: 2, padding:'20px' }} />
+                <CardMedia component="img" image={product.image} alt="product image" sx={{ maxHeight: 150, width: "auto", margin: "auto", marginTop: 1, marginBottom: 2, padding: '20px' }} />
                 <CardContent sx={{ backgroundColor: '#FFFFFFF', borderRadius: '16px', height: '100%', borderTop: '#000000 solid 1px' }}>
                     <div className="information-container">
-                        <Link
-                            href={`/detail/${product.id}`}
-                            color="inherit"
-                            underline="hover"
-                        >
+
+                        <Link id="detail" to={`/detail/${product.id}`} style={{
+                            textDecoration: 'none',
+                            background: 'none',
+                            color: 'inherit',
+                            '&:hover': {
+                                textDecoration: 'underline',
+                            },
+                        }}>
                             <Typography component="div" noWrap sx={redirectButtonStyle} >
                                 {product.title}
                             </Typography>
@@ -47,22 +51,20 @@ function ItemListCard({ product }) {
                             <b>${product.price}</b>
                         </Typography>
                         <CardActions disableSpacing>
-                        <Tooltip title="Add to Cart">
-                                <IconButton aria-label="Add to Cart">
-                                    <AddIcon  sx={{ color: '#000000' }} />
+                            <Tooltip title="Add to Cart">
+                                <IconButton aria-label="Add to Cart" onClick={() => handleAddProduct(product)}>
+                                    <AddIcon sx={{ color: '#000000' }} />
                                 </IconButton>
                             </Tooltip>
-                            {product.isFavorite ?  <Tooltip title="Remove to Favorites">
-                                <IconButton aria-label="Remove to Favorites">
+                            {isFavorite ? <Tooltip title="Remove to Favorites">
+                                <IconButton aria-label="Remove to Favorites" onClick={() => handleFavorite(product.id)}>
                                     <FavoriteIcon sx={{ color: '#000000' }} />
                                 </IconButton>
-                            </Tooltip> :  <Tooltip title="Add to Favorites">
-                                <IconButton aria-label="Add to Favorites">
+                            </Tooltip> : <Tooltip title="Add to Favorites">
+                                <IconButton aria-label="Add to Favorites" onClick={() => handleFavorite(product.id)}>
                                     <FavoriteBorderIcon sx={{ color: '#000000' }} />
                                 </IconButton>
                             </Tooltip>}
-                           
-                            
                         </CardActions>
                     </div>
                 </CardContent>

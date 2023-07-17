@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useContext, useEffect } from 'react';
 import {
     Card, CardContent, Typography, TextField, Box,
     CardMedia, List, ListItem, Divider
@@ -7,7 +7,8 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import './CheckoutPage.css';
 import StyledButton from '../../components/StyledButton/StyledButton';
-
+import CartContent from '../../components/CartContent/CartContent'
+import { CommerceContext } from '../../context/CommerceContext';
 
 const validationSchema = yup.object({
     name: yup
@@ -45,51 +46,9 @@ const redirectButtonStyle = {
 
 
 const CheckoutPage = () => {
-    const [totalItems, setTotalItems] = useState({ quantity: 1, amount: 300 })
-    const [selectedProducts, setSelectedProducts] = useState([{
-        "id": 1,
-        "title": "Fjallraven Backpack",
-        "price": 109.95,
-        "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-        "category": "Men",
-        "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-        "stock": 2000,
-        "count": 0,
-        "isFavorite": false
-    },
-    {
-        "id": 2,
-        "title": "Premium Slim Fit",
-        "price": 22.3,
-        "description": "Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket.",
-        "category": "Men",
-        "image": "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
-        "stock": 2000,
-        "count": 0,
-        "isFavorite": false
-    },
-    {
-        "id": 3,
-        "title": "Cotton Jacket",
-        "price": 55.99,
-        "description": "Great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, husband or son in this thanksgiving or Christmas Day.",
-        "category": "Men",
-        "image": "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg",
-        "stock": 2000,
-        "count": 0,
-        "isFavorite": false
-    },
-    {
-        "id": 4,
-        "title": "Casual Slim Fit",
-        "price": 15.99,
-        "description": "The color could be slightly different between on the screen and in practice. / Please note that body builds vary by person, therefore, detailed size information should be reviewed below on the product description.",
-        "category": "Men",
-        "image": "https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg",
-        "stock": 2000,
-        "count": 0,
-        "isFavorite": false
-    }])
+    const { state, dispatch } = useContext(CommerceContext);
+    const [productsItems, setProductItems] = useState([])
+    const [isEditing, setIsEditing] = useState(false)
 
     const formik = useFormik({
         initialValues: {
@@ -107,6 +66,19 @@ const CheckoutPage = () => {
         },
     });
 
+    useEffect(() => {
+        const keys = Object.keys(state.productsSelected)
+        let productSelected = []
+        if (keys.length) {
+            keys.forEach(key => {
+                productSelected.push(state.productsSelected[key])
+            })
+            setProductItems(productSelected);
+        }
+
+
+    }, [state.productsSelected]);
+
     const handleSubmit = (values) => {
         // Aquí puedes agregar la lógica para procesar la compra
     };
@@ -116,11 +88,11 @@ const CheckoutPage = () => {
             <Card sx={{ width: 1000, height: 600, margin: 2, padding: 10, borderRadius: '16px' }}>
                 <CardContent>
                     <div style={{ display: 'flex' }}>
-                        <div style={{ flex: 1 }}>
-                            <Typography variant="h6" sx={{fontWeight: 'bold'}}>ORDER SUMMARY</Typography>
+                        {productsItems.length > 0 && !isEditing && <div style={{ flex: 1 }}>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>ORDER SUMMARY</Typography>
                             {/* Agrega aquí la lista de los productos comprados */}
                             <List sx={{ height: '450px', overflowY: 'scroll' }} className='custom-scroll'>
-                                {selectedProducts.map((product) => (
+                                {productsItems.map((product) => (
                                     <Fragment key={product.id}>
                                         <ListItem disablePadding sx={{ marginLeft: 1 }}>
                                             <Divider />
@@ -152,13 +124,19 @@ const CheckoutPage = () => {
                                 ))}
                             </List>
                             <Divider sx={{ marginBottom: 2 }} />
-                            <Typography sx={{ fontSize:20, fontWeight: 'bold' }}>TOTAL: ${totalItems.amount}</Typography>
-                            <Typography component="div" noWrap sx={redirectButtonStyle} >
-                                    Edit your order
+                            <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>TOTAL: ${state.totalItems.amount}</Typography>
+                            <Typography component="div" onClick={() => setIsEditing(!isEditing)} noWrap sx={redirectButtonStyle} >
+                                Edit your order
                             </Typography>
-                        </div>
+                        </div>}
+                        {(isEditing || productsItems.length === 0) && <div style={{ flex: 1 }}>
+                            <CartContent isCheckout={true} />
+                            {productsItems.length > 0 && <Typography component="div" onClick={() => setIsEditing(!isEditing)} noWrap sx={redirectButtonStyle} >
+                                Checkout
+                            </Typography>}
+                        </div>}
                         <div style={{ flex: 1, marginLeft: '20px' }}>
-                            <Typography variant="h6" sx={{fontWeight: 'bold'}}>COSTUMER INFORMATION</Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>COSTUMER INFORMATION</Typography>
                             <form onSubmit={formik.handleSubmit}>
                                 <TextField
                                     fullWidth
@@ -170,6 +148,7 @@ const CheckoutPage = () => {
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.name && Boolean(formik.errors.name)}
                                     helperText={formik.touched.name && formik.errors.name}
+                                    disabled={!productsItems.length || isEditing}
                                     sx={{ marginBottom: 2, marginTop: 2 }}
                                 />
                                 <TextField
@@ -182,6 +161,7 @@ const CheckoutPage = () => {
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.surname && Boolean(formik.errors.surname)}
                                     helperText={formik.touched.surname && formik.errors.surname}
+                                    disabled={!productsItems.length || isEditing}
                                     sx={{ marginBottom: 2 }}
                                 />
                                 <TextField
@@ -194,6 +174,7 @@ const CheckoutPage = () => {
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.email && Boolean(formik.errors.email)}
                                     helperText={formik.touched.email && formik.errors.email}
+                                    disabled={!productsItems.length || isEditing}
                                     sx={{ marginBottom: 2 }}
                                 />
                                 <TextField
@@ -206,6 +187,7 @@ const CheckoutPage = () => {
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.confirmEmail && Boolean(formik.errors.confirmEmail)}
                                     helperText={formik.touched.confirmEmail && formik.errors.confirmEmail}
+                                    disabled={!productsItems.length || isEditing}
                                     sx={{ marginBottom: 2 }}
                                 />
                                 <TextField
@@ -218,6 +200,7 @@ const CheckoutPage = () => {
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.city && Boolean(formik.errors.city)}
                                     helperText={formik.touched.city && formik.errors.city}
+                                    disabled={!productsItems.length || isEditing}
                                     sx={{ marginBottom: 2 }}
                                 />
                                 <TextField
@@ -230,6 +213,7 @@ const CheckoutPage = () => {
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.zipCode && Boolean(formik.errors.zipCode)}
                                     helperText={formik.touched.zipCode && formik.errors.zipCode}
+                                    disabled={!productsItems.length || isEditing}
                                     sx={{ marginBottom: 2 }}
                                 />
                                 <TextField
@@ -242,9 +226,10 @@ const CheckoutPage = () => {
                                     onBlur={formik.handleBlur}
                                     error={formik.touched.phone && Boolean(formik.errors.phone)}
                                     helperText={formik.touched.phone && formik.errors.phone}
+                                    disabled={!productsItems.length || isEditing}
                                     sx={{ marginBottom: 2 }}
                                 />
-                                <StyledButton text="Purchase" type="submit" disabled={formik.isValidating || !formik.isValid} />
+                                <StyledButton text="Purchase" type="submit" disabled={formik.isValidating || !formik.isValid || !formik.dirty || !productsItems.length} />
                             </form>
                         </div>
                     </div>

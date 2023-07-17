@@ -1,11 +1,11 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-
-function ContactPage() {
+import './FavoritesPage.css'
+function FavoritesPage() {
   return (
     <>
-      <div className="contact-container">
+      <div className="favorite-container">
         <Card sx={{ maxWidth: 400, margin: 10, padding: 10 }}>
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
@@ -22,4 +22,4 @@ function ContactPage() {
   )
 }
 
-export default ContactPage
+export default FavoritesPage

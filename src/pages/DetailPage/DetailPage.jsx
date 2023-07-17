@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
+import { CommerceContext } from "../../context/CommerceContext";
 
-import { CartContext } from '../../context/CartContext'
 
 import {
   CardActions,
@@ -14,6 +14,7 @@ import {
   Divider,
   Tooltip
 } from "@mui/material";
+
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import './DetailPage.css'
@@ -24,31 +25,60 @@ import { getProductById } from "../../service/firebaseService";
 
 function DetailPage() {
   const [product, setProduct] = useState({});
-  const handleItemChange = () => {
-    console.log("hola")
-  }
+  const { state, dispatch } = useContext(CommerceContext);
+  const [count, setCount] = useState(0);
+  const [stock, setStock] = useState(0);
+  const { id } = useParams();
 
-  const handleOnClick = () => {
-
-  }
-  let { id } = useParams();
-
-   useEffect(() => {
+  useEffect(() => {
     if (id) {
-      const getProduct = async () => {
-        const productData = await getProductById(id);
+      const getProduct = () => {
+        const productData = getProductById(id);
+        setCount(productData.count ? productData.count : 0);
+        setStock(productData.stock ? productData.stock : 0);
         setProduct(productData);
       };
       getProduct();
-   }
-   }, [id]);
+    }
+  }, [id]);
+
+  const handleNewCount = (newCount, stockAvailable) => {
+    setCount(newCount);
+    setStock(stockAvailable);
+
+    const newState = { ...state.productsSelected };
+    if (newState[id] && newCount > 0) {
+      newState[id].count = newCount;
+      newState[id].stock = stockAvailable;
+    } else if (newState[id] && newCount === 0) {
+      delete newState[id];
+    }
+
+    dispatch({ type: 'SET_PRODUCTS_SELECTED', payload: newState });
+  };
+
+
+  const handleAddProduct = () => {
+    debugger;
+    const newState = { ...state.productsSelected };
+    if (newState[id]) {
+      newState[id].count += count
+    } else {
+      newState[id] = {
+        ...product,
+        count: count
+      }
+    }
+    dispatch({ type: 'SET_PRODUCTS_SELECTED', payload: newState });
+  }
+
 
   return (
     <>
       <div className="product-container">
         <Card sx={{ width: 900, height: 420, margin: 2, padding: 10, borderRadius: '16px', }}>
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <CardMedia component="img" image={product.image} alt="product image" sx={{ height: 400, maxWidth: "50%", margin: "auto", marginTop: 2, objectFit: 'contain', padding:1 }} />
+            <CardMedia component="img" image={product.image} alt="product image" sx={{ height: 400, maxWidth: "50%", margin: "auto", marginTop: 2, objectFit: 'contain', padding: 1 }} />
             <CardContent sx={{ display: 'flex', flexDirection: 'column', width: "400" }}>
               <Typography sx={{ fontSize: 18, fontWeight: 'bold' }}>
                 {product.title}
@@ -71,21 +101,16 @@ function DetailPage() {
               <Typography sx={{ fontSize: 14, marginTop: 2, textTransform: 'capitalize' }} color="text.secondary">
                 {product.description}
               </Typography>
-              <CardActions disableSpacing sx={{ display: 'flex', flexDirection: 'column', height: '100%', marginTop:2}}>
-
-                <CounterButton stock={product.stock} totalItems={1} onChangeItems={handleItemChange}  className="margin-10" />
-
-                <StyledButton text="Add to Cart" onClick={handleOnClick} />
+              <CardActions disableSpacing sx={{ display: 'flex', flexDirection: 'column', height: '100%', marginTop: 2 }}>
+                <CounterButton initialStock={stock} totalItems={count} onChangeItems={(newCount, stockAvailable) => handleNewCount(newCount, stockAvailable)} />
+                <StyledButton text="Add to Cart" disabled={count == 0} onClick={handleAddProduct} />
               </CardActions>
             </CardContent>
-
           </Box>
-
         </Card>
       </div>
-
     </>
   )
 }
 
-export default DetailPage
+export default DetailPage;

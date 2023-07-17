@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Typography } from "@mui/material";
 import './CounterButton.css'
 
@@ -7,6 +7,11 @@ const CounterButton = ({ initialStock, totalItems, onChangeItems }) => {
     const [items, setItems] = useState(totalItems);
     const [stock, setStock] = useState(initialStock);
     const [showWarningStock, setShowWarningStock] = useState(false)
+
+    useEffect(() => {
+        setItems(totalItems)
+        setStock(initialStock)
+      }, [initialStock, totalItems])
 
     const handleRemove = () => {
         if (items > 0) {

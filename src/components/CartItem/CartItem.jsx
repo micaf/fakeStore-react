@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { CommerceContext } from '../../context/CommerceContext';
 import {
   Box,
   Typography,
@@ -6,13 +7,7 @@ import {
   Card,
   CardMedia,
   CardContent,
-  CardActions,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
+  CardActions
 } from "@mui/material";
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -21,25 +16,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CounterButton from "../CounterButton/CounterButton";
 
 
-const CartItem = ({ product, handleItemChange }) => {
+const CartItem = ({ product }) => {
+  const { state, dispatch } = useContext(CommerceContext);
   const { id, title, price, image } = product;
   const [isEditing, setIsEditing] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
   const [count, setCount] = useState(product.count);
   const [stock, setStock] = useState(product.stock)
 
+  useEffect(() => {
+    setCount(product.count)
+    setStock(product.stock)
+  }, [product])
 
-  const handleDelete = (id) => {
-    // Handle delete logic
-    if (id && openModal) {
-      setCount(0)
-      handleModal()
-    }
-  };
-
-  const handleModal = () => {
-    setOpenModal(!openModal)
-  };
 
   const handleEdit = () => {
     setIsEditing(!isEditing)
@@ -49,7 +37,17 @@ const CartItem = ({ product, handleItemChange }) => {
   const handleNewCount = (count, stock) => {
     setCount(count)
     setStock(stock)
+
+    const newState = { ...state.productsSelected };
+    if (newState[id] && count > 0) {
+      newState[id].count = count
+    } else {
+      delete newState[id];
+    }
+
+    dispatch({ type: 'SET_PRODUCTS_SELECTED', payload: newState });
   }
+
 
   return (
     <>
@@ -78,7 +76,7 @@ const CartItem = ({ product, handleItemChange }) => {
               <IconButton aria-label="Edit" onClick={handleEdit}>
                 <EditIcon sx={{ fontSize: 13, color: '#000000' }} />
               </IconButton>
-              <IconButton aria-label="Delete Product Selected" onClick={handleModal}>
+              <IconButton aria-label="Delete Product Selected" onClick={() => handleNewCount(0)}>
                 <DeleteIcon sx={{ fontSize: 13, color: '#000000' }} />
               </IconButton>
             </Box>
@@ -90,27 +88,6 @@ const CartItem = ({ product, handleItemChange }) => {
           </CardContent>
         </Box>
       </Card>
-
-
-      <Dialog
-        open={openModal}
-        onClose={handleModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Remove products"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to remove <b>{title}({count})</b> from your cart?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleModal}>No</Button>
-          <Button onClick={() => handleDelete(id)} autoFocus>Yes</Button>
-        </DialogActions>
-      </Dialog>
     </>
 
   );

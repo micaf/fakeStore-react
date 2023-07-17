@@ -9,3 +9,25 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+/* Estilos para WebKit (Chrome, Safari) */
+body::-webkit-scrollbar {
+  width: 8px; /* Anchura de la scrollbar */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Color del pulgar (scrollbar thumb) */
+}
+
+/* Estilos para Firefox */
+body::-moz-scrollbar {
+  width: 8px; /* Anchura de la scrollbar */
+}
+
+body::-moz-scrollbar-thumb {
+  background-color: #000000; /* Color del pulgar (scrollbar thumb) */
+}
+
+body::-webkit-scrollbar:hover {
+  background-color: #000000; /* Anchura de la scrollbar */
+}

@@ -1,13 +1,11 @@
-import { useEffect, useState  } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import axios from "axios";
 import CartWidget from '../CartWidget/CartWidget';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import './NavBar.css';
 
-import { upperFirstLetter } from '../../shared/Utils'
 import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
 
 import { getCategories } from "../../service/firebaseService";
@@ -32,17 +30,12 @@ function NavBar() {
     };
 
     useEffect(() => {
-
-        const getAllCategories = async () => {
-            const docs = await getCategories();
-            setCategories(docs);
-          };
-          getAllCategories();
-    
-        // axios(`${import.meta.env.VITE_BASE_URL}/products/categories`).then((json) =>
-        //    setCategories(json.data)
-        //  );
-   }, [categories]);
+        const getAllCategories = () => {
+            const docs = getCategories();
+            setCategories(docs.categories);
+        };
+        getAllCategories();
+    }, [categories]);
 
 
 
@@ -55,11 +48,14 @@ function NavBar() {
         <>
             <nav className="navbar">
                 <div className="logo">
-                    <a href="/" id="NavLogo">
+                    <Link id="home" to="/home">
                         <StoreMallDirectoryIcon sx={{ width: '60px', height: '40px', color: '#000000' }} />
-                    </a>
+                    </Link>
                 </div>
                 <div className="links">
+                    <Link id="Shop" to="/shop">
+                        Shop
+                    </Link>
                     <a aria-controls={open ? 'basic-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
@@ -73,25 +69,22 @@ function NavBar() {
                         onClose={handleClose}
                         MenuListProps={{
                             'aria-labelledby': 'basic-button',
-                            style: { minWidth: '100vw', display: 'inline-flex',flexDirection:'row', justifyContent:'space-around' },
-                          }}
-                          getcontentanchorel={null}
-                          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                          anchorPosition={ {top: 160, left: 0 }}
-                          sx={{top:'40px',}}
+                            style: { minWidth: '100vw', display: 'inline-flex', flexDirection: 'row', justifyContent: 'space-around' },
+                        }}
+                        getcontentanchorel={null}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                        anchorPosition={{ top: 160, left: 0 }}
+                        sx={{ top: '40px', }}
                     >
                         {categories.map((category, index) => <MenuItem key={index}><Link to={`/category/${category}`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleClose}>
-                            {upperFirstLetter(category)}
+                            {category}
                         </Link></MenuItem>)}
 
 
                     </Menu>
-                    <Link id="Shop" to="/shop">
-                        Shop
-                    </Link>
-                    <Link id="Contact" to="/contact">
-                        Contact
+                    <Link id="Favorites" to="/favorites">
+                       Favorites
                     </Link>
                 </div>
                 {!isCheckoutPage && (<div className="cart">
