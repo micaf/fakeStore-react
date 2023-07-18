@@ -55,6 +55,7 @@ function ItemListContainer({ products }) {
               product={product}
               handleAddProduct={(product) => handleAddProduct(product)}
               handleFavorite={(product) => handleFavorite(product)}
+              disabled={state.productSelected && Object.keys(state.productSelected).includes(product.id) && state.productSelected[product.id].count == state.productSelected[product.id].stock}
               isFavorite={setFavorite(product.id)}
             />
           ))

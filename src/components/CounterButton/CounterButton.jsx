@@ -3,7 +3,7 @@ import { Typography } from "@mui/material";
 import './CounterButton.css'
 
 
-const CounterButton = ({ initialStock, totalItems, onChangeItems }) => {
+const CounterButton = ({ initialStock, totalItems, onChangeItems, disabled }) => {
     const [items, setItems] = useState(totalItems);
     const [stock, setStock] = useState(initialStock);
     const [showWarningStock, setShowWarningStock] = useState(false)
@@ -26,7 +26,7 @@ const CounterButton = ({ initialStock, totalItems, onChangeItems }) => {
         if (items < stock) {
             setItems(items + 1);
             setStock(stock - 1)
-            onChangeItems(items + 1, stock + 1);
+            onChangeItems(items + 1);
             setShowWarningStock(false)
         } else {
             setShowWarningStock(true)
@@ -39,6 +39,7 @@ const CounterButton = ({ initialStock, totalItems, onChangeItems }) => {
                 <button
                     className='counter'
                     onClick={handleRemove}
+                    disabled={disabled}
                 >
                     -
                 </button>
@@ -46,11 +47,12 @@ const CounterButton = ({ initialStock, totalItems, onChangeItems }) => {
                 <button
                     className='counter'
                     onClick={handleAdd}
+                    disabled={disabled}
                 >
                     +
                 </button>
             </div>
-            {showWarningStock && <Typography sx={{ fontSize: 10, marginTop: 1, textAlign: 'center' }} color="text.secondary">
+            {(showWarningStock || disabled) && <Typography sx={{ fontSize: 10, marginTop: 1, textAlign: 'center' }} color="text.secondary">
                 No more stock available
             </Typography>}
         </div >

@@ -1,5 +1,5 @@
 import { db } from "../firebase/firebaseConfig";
-import { collection, query, getDocs, where, doc, getDoc, addDoc, setDoc  } from "firebase/firestore";
+import { collection, query, getDocs, where, doc, getDoc, addDoc, setDoc } from "firebase/firestore";
 
 
 export async function getProducts() {
@@ -52,20 +52,26 @@ export async function getProductById(productId) {
 
 export async function addPurchase(purchaseData) {
     try {
-        debugger;
-      const purchaseRef = collection(db, "purchases");
-      const docRef = await addDoc(purchaseRef, purchaseData);
-  
-      const purchasedProducts = purchaseData.products;
-      for (const purchasedProduct of purchasedProducts) {
-        const productId = purchasedProduct.id;
-        purchasedProduct.stock = purchasedProduct.stock - purchasedProduct.count
+        const purchaseRef = collection(db, "purchases");
+        const docRef = await addDoc(purchaseRef, purchaseData);
 
-        await setDoc(doc(db, "products", productId), purchasedProduct)
-      }
-  
-      return docRef.id;
+        const purchasedProducts = purchaseData.products;
+        for (const purchasedProduct of purchasedProducts) {
+            const productId = purchasedProduct.id;
+            const newProduct = {
+                category: purchasedProduct.category,
+                description: purchasedProduct.description,
+                image: purchasedProduct.image,
+                price: purchasedProduct.price,
+                stock: purchasedProduct.stock - purchasedProduct.count,
+                title: purchasedProduct.title
+            }
+
+            await setDoc(doc(db, "products", productId), newProduct)
+        }
+
+        return docRef.id;
     } catch (error) {
-      return null;
+        return null;
     }
-  }
+}

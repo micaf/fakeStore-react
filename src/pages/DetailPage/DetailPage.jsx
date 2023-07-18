@@ -46,19 +46,10 @@ function DetailPage() {
     }
   }, [id]);
 
-  const handleNewCount = (newCount, stockAvailable) => {
-    setCount(newCount);
-    setStock(stockAvailable);
-
+  const handleNewCount = (newCount) => {
     const newState = { ...state.productsSelected };
-    if (newState[id] && newCount > 0) {
-      newState[id].count = newCount;
-      newState[id].stock = stockAvailable;
-    } else if (newState[id] && newCount === 0) {
-      delete newState[id];
-    }
-
-    dispatch({ type: 'SET_PRODUCTS_SELECTED', payload: newState });
+      setCount(newCount);
+      setStock(newState[id] ? newState[id].stock - newCount : stock - newCount);
   };
 
 
@@ -69,7 +60,7 @@ function DetailPage() {
     } else {
       newState[id] = {
         ...product,
-        count: count
+        count: count,
       }
     }
     dispatch({ type: 'SET_PRODUCTS_SELECTED', payload: newState });
@@ -109,7 +100,7 @@ function DetailPage() {
                 {product.description}
               </Typography>
               <CardActions disableSpacing sx={{ display: 'flex', flexDirection: 'column', height: '100%', marginTop: 2 }}>
-                <CounterButton initialStock={stock} totalItems={count} onChangeItems={(newCount, stockAvailable) => handleNewCount(newCount, stockAvailable)} />
+                <CounterButton initialStock={stock} totalItems={count} disabled={state.productSelected && Object.keys(state.productSelected).includes(id) && ((state.productsSelected[id]?.count + count) == state.productsSelected[id]?.stock || count == state.productsSelected[id]?.stock)} onChangeItems={(newCount, stockAvailable) => handleNewCount(newCount, stockAvailable)} />
                 <StyledButton text="Add to Cart" disabled={count == 0} onClick={handleAddProduct} />
               </CardActions>
             </CardContent>
