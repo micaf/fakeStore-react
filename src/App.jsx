@@ -1,7 +1,7 @@
 // React router dom
-import { useEffect, useContext, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { CommerceContext, CommerceProvider } from './context/CommerceContext';
+//Provider
+import { CommerceProvider } from './context/CommerceContext';
 //Componentes
 import NavBar from './components/NavBar/NavBar'
 import HomePage from './pages/HomePage/HomePage';

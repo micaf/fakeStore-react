@@ -12,7 +12,8 @@ import {
   Card,
   Box,
   Divider,
-  Tooltip
+  Tooltip,
+  CircularProgress
 } from "@mui/material";
 
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -29,14 +30,17 @@ function DetailPage() {
   const [count, setCount] = useState(0);
   const [stock, setStock] = useState(0);
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true)
     if (id) {
-      const getProduct = () => {
-        const productData = getProductById(id);
-        setCount(productData.count ? productData.count : 0);
-        setStock(productData.stock ? productData.stock : 0);
-        setProduct(productData);
+      const getProduct = async () => {
+        const productData = await getProductById(id);
+        setCount(productData?.count ? productData.count : 0);
+        setStock(productData?.stock ? productData.stock : 0);
+        setProduct(productData ? productData : null);
+        setLoading(false)
       };
       getProduct();
     }
@@ -59,7 +63,6 @@ function DetailPage() {
 
 
   const handleAddProduct = () => {
-    debugger;
     const newState = { ...state.productsSelected };
     if (newState[id]) {
       newState[id].count += count
@@ -75,9 +78,13 @@ function DetailPage() {
 
   return (
     <>
-      <div className="product-container">
+      {loading ? (
+        <div className="product-container">
+          <CircularProgress color="inherit" sx={{marginTop:2}} />
+        </div>
+    ) : (<div className="product-container">
         <Card sx={{ width: 900, height: 420, margin: 2, padding: 10, borderRadius: '16px', }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+         {product !== null ? (<Box sx={{ display: 'flex', flexDirection: 'row' }}>
             <CardMedia component="img" image={product.image} alt="product image" sx={{ height: 400, maxWidth: "50%", margin: "auto", marginTop: 2, objectFit: 'contain', padding: 1 }} />
             <CardContent sx={{ display: 'flex', flexDirection: 'column', width: "400" }}>
               <Typography sx={{ fontSize: 18, fontWeight: 'bold' }}>
@@ -106,9 +113,22 @@ function DetailPage() {
                 <StyledButton text="Add to Cart" disabled={count == 0} onClick={handleAddProduct} />
               </CardActions>
             </CardContent>
-          </Box>
+          </Box>) :
+          (
+            <Box sx={{  display: 'inline-flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '300px'}}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{fontWeight:'bold'}}>
+                  There is no product associated with this id
+            </Typography>
+        </Box>
+          )
+          }
         </Card>
-      </div>
+      </div>)}
     </>
   )
 }

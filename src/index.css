@@ -10,24 +10,23 @@ html, body {
   padding: 0;
 }
 
-/* Estilos para WebKit (Chrome, Safari) */
 body::-webkit-scrollbar {
-  width: 8px; /* Anchura de la scrollbar */
+  width: 8px; 
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: transparent; /* Color del pulgar (scrollbar thumb) */
+  background-color: transparent;
 }
 
-/* Estilos para Firefox */
+
 body::-moz-scrollbar {
-  width: 8px; /* Anchura de la scrollbar */
+  width: 8px;
 }
 
 body::-moz-scrollbar-thumb {
-  background-color: #000000; /* Color del pulgar (scrollbar thumb) */
+  background-color: #000000; 
 }
 
 body::-webkit-scrollbar:hover {
-  background-color: #000000; /* Anchura de la scrollbar */
+  background-color: #000000; 
 }

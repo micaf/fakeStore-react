@@ -1,4 +1,4 @@
-import { useReducer, createContext, useEffect } from "react";
+import { useReducer, createContext } from "react";
 import { productReducer } from "../reducer/productsReducer";
 
 export const CommerceContext = createContext();
@@ -15,14 +15,6 @@ const initialState = {
 
 export const CommerceProvider = ({ children }) => {
   const [state, dispatch] = useReducer(productReducer, initialState);
-
-  useEffect(() => {
-   // const savedCartItems = localStorage.getItem('productsItems');
-    // // if (savedCartItems) {
-    // //   dispatch({ type: 'SET_PRODUCTS_SELECTED', payload: JSON.parse(savedCartItems) });
-    // // }
-  }, []);
-
 
   return (
     <CommerceContext.Provider value={{ state, dispatch }}>

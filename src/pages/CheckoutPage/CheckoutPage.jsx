@@ -9,31 +9,39 @@ import './CheckoutPage.css';
 import StyledButton from '../../components/StyledButton/StyledButton';
 import CartContent from '../../components/CartContent/CartContent'
 import { CommerceContext } from '../../context/CommerceContext';
+import { addPurchase } from '../../service/firebaseService';
+
 
 const validationSchema = yup.object({
     name: yup
-        .string('Enter your name')
+        .string('Enter your Name')
         .required('Name is required'),
     surname: yup
-        .string('Enter your surname')
+        .string('Enter your Surname')
         .required('Surname is required'),
     email: yup
-        .string('Enter your email')
-        .email('Enter a valid email')
+        .string('Enter your Email')
+        .email('Enter a valid Email')
         .required('Email is required'),
     confirmEmail: yup
-        .string("Confirm your email")
+        .string("Confirm your Email")
         .oneOf([yup.ref('email'), null], 'Emails do not match')
         .required('Confirm Email is required'),
     city: yup
-        .string('Enter your city')
+        .string('Enter your City')
         .required('City is required'),
     zipCode: yup
-        .string('Enter your zip code')
-        .required('Zip Code is required'),
+        .number('Enter your Zip Code')
+        .typeError("That doesn't look like a Zip Code")
+        .required('Zip Code is required')
+        .positive("A Zip Code can't start with a minus")
+        .integer("A Zip Code can't include a decimal point"),
     phone: yup
-        .string('Enter your phone')
+        .number('Enter your Phone Number')
+        .typeError("That doesn't look like a Phone Number")
         .required('Phone is required')
+        .positive("A Phone Number can't start with a minus")
+        .integer("A Phone Number can't include a decimal point")
 });
 
 const redirectButtonStyle = {
@@ -49,6 +57,8 @@ const CheckoutPage = () => {
     const { state, dispatch } = useContext(CommerceContext);
     const [productsItems, setProductItems] = useState([])
     const [isEditing, setIsEditing] = useState(false)
+    const [showPurchaseInformation, setShowPurchaseInformation] = useState(false);
+    const [purchaseInformation, setPurchaseInformation] = useState({ title: '', message: '' })
 
     const formik = useFormik({
         initialValues: {
@@ -62,7 +72,17 @@ const CheckoutPage = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            console.log(JSON.stringify(values, null, 2));
+            const purchaseData = {values, products: productsItems}
+            addPurchase(purchaseData)
+                .then((purchaseId) => {
+                    if (purchaseId) {
+                        setPurchaseInformation({ title: 'Successful Purchase', message: `Thank you for your purchase! Purchase successfully added. Purchase ID: ${purchaseId}` })
+                        dispatch({ type: 'SET_PRODUCTS_SELECTED', payload: {} });
+                    } else {
+                        setPurchaseInformation({ title: 'Purchase error', message: 'There was an error processing the purchase. We are sorry for the inconvenience' })
+                    }
+                    setShowPurchaseInformation(true)
+                });
         },
     });
 
@@ -79,56 +99,54 @@ const CheckoutPage = () => {
 
     }, [state.productsSelected]);
 
-    const handleSubmit = (values) => {
-        // Aquí puedes agregar la lógica para procesar la compra
-    };
 
     return (
         <div className="checkout-container">
             <Card sx={{ width: 1000, height: 600, margin: 2, padding: 10, borderRadius: '16px' }}>
                 <CardContent>
-                    <div style={{ display: 'flex' }}>
-                        {productsItems.length > 0 && !isEditing && <div style={{ flex: 1 }}>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>ORDER SUMMARY</Typography>
-                            {/* Agrega aquí la lista de los productos comprados */}
-                            <List sx={{ height: '450px', overflowY: 'scroll' }} className='custom-scroll'>
-                                {productsItems.map((product) => (
-                                    <Fragment key={product.id}>
-                                        <ListItem disablePadding sx={{ marginLeft: 1 }}>
-                                            <Divider />
-                                            <Card sx={{ width: '90%', margin: '10px 0px', padding: 1, borderRadius: '16px' }}>
-                                                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                                                    <CardMedia
-                                                        component="img"
-                                                        image={product.image}
-                                                        alt="product image"
-                                                        sx={{ height: 100, maxWidth: "30%", margin: "auto", marginTop: 1, objectFit: 'contain', padding: '5px' }}
-                                                    />
-                                                    <CardContent sx={{ display: 'flex', flexDirection: 'column', width: "70%" }}>
-                                                        <Typography sx={{ fontSize: 13, fontWeight: 'bold' }}>
-                                                            {product.title}
-                                                        </Typography>
-                                                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                                                            <Typography sx={{ fontSize: 13, fontWeight: 'bold', color: '#D32F2F', marginRight: 1 }}>
-                                                                ${product.price}
+                    {!showPurchaseInformation ? (<div style={{ display: 'flex' }}>
+                        {
+                            productsItems.length > 0 && !isEditing && <div style={{ flex: 1 }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>ORDER SUMMARY</Typography>
+                                <List sx={{ height: '450px', overflowY: 'scroll' }} className='custom-scroll'>
+                                    {productsItems.map((product) => (
+                                        <Fragment key={product.id}>
+                                            <ListItem disablePadding sx={{ marginLeft: 1 }}>
+                                                <Divider />
+                                                <Card sx={{ width: '90%', margin: '10px 0px', padding: 1, borderRadius: '16px' }}>
+                                                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                                                        <CardMedia
+                                                            component="img"
+                                                            image={product.image}
+                                                            alt="product image"
+                                                            sx={{ height: 100, maxWidth: "30%", margin: "auto", marginTop: 1, objectFit: 'contain', padding: '5px' }}
+                                                        />
+                                                        <CardContent sx={{ display: 'flex', flexDirection: 'column', width: "70%" }}>
+                                                            <Typography sx={{ fontSize: 13, fontWeight: 'bold' }}>
+                                                                {product.title}
                                                             </Typography>
-                                                            <Typography sx={{ fontSize: 13, color: '#000000' }}>
-                                                                QTY: {product.count}
-                                                            </Typography>
-                                                        </Box>
-                                                    </CardContent>
-                                                </Box>
-                                            </Card>
-                                        </ListItem>
-                                    </Fragment>
-                                ))}
-                            </List>
-                            <Divider sx={{ marginBottom: 2 }} />
-                            <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>TOTAL: ${state.totalItems.amount}</Typography>
-                            <Typography component="div" onClick={() => setIsEditing(!isEditing)} noWrap sx={redirectButtonStyle} >
-                                Edit your order
-                            </Typography>
-                        </div>}
+                                                            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                                                <Typography sx={{ fontSize: 13, fontWeight: 'bold', color: '#D32F2F', marginRight: 1 }}>
+                                                                    ${product.price}
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 13, color: '#000000' }}>
+                                                                    QTY: {product.count}
+                                                                </Typography>
+                                                            </Box>
+                                                        </CardContent>
+                                                    </Box>
+                                                </Card>
+                                            </ListItem>
+                                        </Fragment>
+                                    ))}
+                                </List>
+                                <Divider sx={{ marginBottom: 2 }} />
+                                <Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>TOTAL: ${state.totalItems.amount}</Typography>
+                                <Typography component="div" onClick={() => setIsEditing(!isEditing)} noWrap sx={redirectButtonStyle} >
+                                    Edit your order
+                                </Typography>
+                            </div>
+                        }
                         {(isEditing || productsItems.length === 0) && <div style={{ flex: 1 }}>
                             <CartContent isCheckout={true} />
                             {productsItems.length > 0 && <Typography component="div" onClick={() => setIsEditing(!isEditing)} noWrap sx={redirectButtonStyle} >
@@ -232,9 +250,27 @@ const CheckoutPage = () => {
                                 <StyledButton text="Purchase" type="submit" disabled={formik.isValidating || !formik.isValid || !formik.dirty || !productsItems.length} />
                             </form>
                         </div>
-                    </div>
+                    </div>) :
+                        (
+                            <Box sx={{  display: 'inline-flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%',
+                                height: '300px'}}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2" sx={{fontWeight:'bold'}}>
+                                    {purchaseInformation.title}
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    {purchaseInformation.message}
+                                </Typography>
+                            </Box>
+                        )}
                 </CardContent>
             </Card>
+
+
+
         </div>
     );
 };

@@ -1,13 +1,12 @@
 import { useState,useContext, useEffect } from 'react';
-import { CommerceContext } from '../../context/CommerceContext';
-
 import {
   Drawer,
   Badge,
   IconButton
 } from "@mui/material";
-
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
+import { CommerceContext } from '../../context/CommerceContext';
 import CartContent from '../CartContent/CartContent';
 
 

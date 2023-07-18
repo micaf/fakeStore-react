@@ -1,6 +1,9 @@
+import { useEffect, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Typography } from "@mui/material";
+import ItemListContainer from "../../components/ItemListContainer/ItemListContainer";
+
+import {Typography, CircularProgress } from "@mui/material";
 
 import banner from '../../assets/banner.mp4'
 import women from '../../assets/women.mp4'
@@ -9,8 +12,32 @@ import electronics from '../../assets/electronics.mp4'
 import jewelry from '../../assets/jewelry.mp4'
 
 import './HomePage.css'
+import { CommerceContext } from "../../context/CommerceContext";
+import { getProducts } from "../../service/firebaseService";
 
 function HomePage() {
+    const [loading, setLoading] = useState(true);
+    const { state, dispatch } = useContext(CommerceContext);
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        setLoading(true)
+        if (!state.allProducts.length) {
+            const getAllProducts = async() => {
+              const docs = await getProducts();
+              dispatch({ type: 'SET_ALL_PRODUCTS', payload: docs })
+              const firstFourProducts = state.allProducts.slice(0, 4);
+              setProducts(firstFourProducts);
+              setLoading(false)
+            };
+            getAllProducts()
+          } else {
+            setLoading(true)
+            const firstFourProducts = state.allProducts.slice(0, 4);
+            setProducts(firstFourProducts);
+            setLoading(false)
+          }
+      }, [state.allProducts]);
 
     return (
         <>
@@ -43,6 +70,20 @@ function HomePage() {
 
 
                 </div>
+
+                {products.length > 0 && !loading ? (
+                    <>
+                        <Typography sx={{ fontSize: 'h5.fontSize', fontWeight: 'bold', marginLeft: 20, marginTop:10 }}>Special products for you!</Typography>
+                        <ItemListContainer products={products}></ItemListContainer>
+                    </>
+                ) : (
+                    <Typography sx={{ fontSize: 'h5.fontSize', padding: 2, marginLeft: 20 }}>
+                        There are not products selected for you
+                    </Typography>
+                )}
+                {loading && <CircularProgress color="inherit" />}
+
+
 
             </div>
         </>

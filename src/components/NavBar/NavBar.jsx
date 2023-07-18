@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import CartWidget from '../CartWidget/CartWidget';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import './NavBar.css';
-
+import { Menu, MenuItem } from '@mui/material';
 import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
 
 import { getCategories } from "../../service/firebaseService";
+import CartWidget from '../CartWidget/CartWidget';
+
+import './NavBar.css';
+
 
 function NavBar() {
     const [categories, setCategories] = useState([]);
@@ -30,12 +30,12 @@ function NavBar() {
     };
 
     useEffect(() => {
-        const getAllCategories = () => {
-            const docs = getCategories();
-            setCategories(docs.categories);
+        const getAllCategories = async () => {
+            const docs = await getCategories();
+            setCategories(docs);
         };
         getAllCategories();
-    }, [categories]);
+    }, []);
 
 
 
@@ -84,7 +84,7 @@ function NavBar() {
 
                     </Menu>
                     <Link id="Favorites" to="/favorites">
-                       Favorites
+                        Favorites
                     </Link>
                 </div>
                 {!isCheckoutPage && (<div className="cart">

@@ -57,11 +57,11 @@ function ItemListCard({ product, handleAddProduct, isFavorite, handleFavorite })
                                 </IconButton>
                             </Tooltip>
                             {isFavorite ? <Tooltip title="Remove to Favorites">
-                                <IconButton aria-label="Remove to Favorites" onClick={() => handleFavorite(product.id)}>
+                                <IconButton aria-label="Remove to Favorites" onClick={() => handleFavorite(product)}>
                                     <FavoriteIcon sx={{ color: '#000000' }} />
                                 </IconButton>
                             </Tooltip> : <Tooltip title="Add to Favorites">
-                                <IconButton aria-label="Add to Favorites" onClick={() => handleFavorite(product.id)}>
+                                <IconButton aria-label="Add to Favorites" onClick={() => handleFavorite(product)}>
                                     <FavoriteBorderIcon sx={{ color: '#000000' }} />
                                 </IconButton>
                             </Tooltip>}

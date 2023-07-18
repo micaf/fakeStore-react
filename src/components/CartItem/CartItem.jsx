@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import { CommerceContext } from '../../context/CommerceContext';
 import {
   Box,
   Typography,
@@ -9,10 +8,10 @@ import {
   CardContent,
   CardActions
 } from "@mui/material";
-
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import { CommerceContext } from '../../context/CommerceContext';
 import CounterButton from "../CounterButton/CounterButton";
 
 

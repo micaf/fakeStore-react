@@ -1,9 +1,5 @@
 import { Fragment, useEffect, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CommerceContext } from '../../context/CommerceContext';
-import { getProductById } from "../../service/firebaseService";
-import CartItem from '../CartItem/CartItem';
-
 import {
     List,
     ListItem,
@@ -11,19 +7,12 @@ import {
     Typography,
     Box
 } from "@mui/material";
-
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import StyledButton from '../StyledButton/StyledButton';
+
+import { CommerceContext } from '../../context/CommerceContext';
+import CartItem from '../CartItem/CartItem';
 import './CartContent.css'
-
-const redirectButtonStyle = {
-    fontSize: 13, fontWeight: 'bold', cursor: "pointer",
-    "&:hover": {
-        textDecoration: "underline",
-        textTransform: "uppercase"
-    },
-};
-
 
 const CartContent = ({ isCheckout }) => {
     const { state, dispatch } = useContext(CommerceContext);
@@ -47,8 +36,6 @@ const CartContent = ({ isCheckout }) => {
                     quantity: quantityTotal
                 }
             });
-
-            //     //localStorage.setItem('productsItems', JSON.stringify(state.productsSelected));
         } else {
             setProductItems([]);
             dispatch({
@@ -61,71 +48,6 @@ const CartContent = ({ isCheckout }) => {
 
 
     }, [state.productsSelected]);
-
-    const deleteProductSelected = (index) => {
-        debugger;
-        const newProductList = state.productsItems.splice(1, index);
-        const quantityTotal = Object.values(state.productsSelected).reduce((acc, item) => acc + item.count, 0);
-        const totalAmount = updatedProducts.reduce((acc, item) => acc + item.count * item.price, 0);
-        dispatch({
-            type: 'SET_PRODUCTS_ITEMS', payload: newProductList
-
-        });
-        dispatch({
-            type: 'SET_TOTAL_ITEMS', payload: {
-                quantity: quantityTotal,
-                amount: totalAmount.toFixed(2)
-            }
-        });
-    }
-
-    const updateProductSelected = (id, index) => {
-        if (state.productsSelected[id].count === state.productsItems[index].count) {
-            return
-        }
-        const count = state.productsSelected[id].count;
-        const quantityTotal = Object.values(state.productsSelected).reduce((acc, item) => acc + item.count, 0);
-        const updatedProducts = [...state.productsItems]
-        updatedProducts[existingProductIndex].count = count
-        const totalAmount = updatedProducts.reduce((acc, item) => acc + item.count * item.price, 0);
-        dispatch({
-            type: 'SET_PRODUCTS_ITEMS', payload: updatedProducts
-
-        });
-        dispatch({
-            type: 'SET_TOTAL_ITEMS', payload: {
-                quantity: quantityTotal,
-                amount: totalAmount.toFixed(2)
-            }
-        });
-    }
-
-
-    const addProductSelected = (id) => {
-        const getProduct = async () => {
-            const product = await getProductById(id);
-            const count = state.productsSelected[id].count;
-            const quantityTotal = Object.values(state.productsSelected).reduce((acc, item) => acc + item.count, 0)
-            debugger;
-            // const newProductsItems = [...state.productsItems, {
-            //     ...product, count: count
-            // }]
-            const totalAmount = 0 // newProductsItems.reduce((acc, item) => acc + item.count * item.price, 0);
-            dispatch({
-                type: 'SET_PRODUCTS_ITEMS', payload: {
-                    ...product, count: count
-                }
-            });
-            console.log(state.productsItems)
-            dispatch({
-                type: 'SET_TOTAL_ITEMS', payload: {
-                    quantity: quantityTotal,
-                    amount: totalAmount.toFixed(2)
-                }
-            });
-        };
-        getProduct();
-    }
 
 
     const handleOnClick = () => {
@@ -142,7 +64,7 @@ const CartContent = ({ isCheckout }) => {
                 <>
                     <Typography sx={{ fontSize: 15, fontWeight: 'bold', margin: '10px 0px' }}>Total Items: {state.totalItems.quantity}</Typography>
                     <Divider />
-                    <List sx={{ height: '500px', overflowY: 'scroll' }} className='custom-scroll'>
+                    <List sx={{ height: '450px', overflowY: 'scroll' }} className='custom-scroll'>
                         {productsItems.map((product) => (
                             <Fragment key={product.id}>
                                 <ListItem disablePadding sx={{ marginLeft: 1 }}>
@@ -153,7 +75,7 @@ const CartContent = ({ isCheckout }) => {
                         ))}
                     </List>
                     <Divider sx={{ marginBottom: 2 }} />
-                    <Typography sx={{ fontSize: 15, fontWeight: 'bold', marginBottom: 2 }}>TOTAL: ${state.totalItems.amount}</Typography>
+                    <Typography sx={{ fontSize: 15, fontWeight: 'bold', marginBottom: 1}}>TOTAL: ${state.totalItems.amount}</Typography>
                     {!isCheckout && <Link to="/checkout"><StyledButton text="Checkout" onClick={handleOnClick} /></Link>}
                 </>) :
                 (<Typography sx={{ fontSize: 15, margin: '10px 0px' }}>

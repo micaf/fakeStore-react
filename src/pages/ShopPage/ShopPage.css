@@ -1,0 +1,9 @@
+.loading-container {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: #FAFAFA;
+    width: 100vw;
+    min-height: 100vh;
+}

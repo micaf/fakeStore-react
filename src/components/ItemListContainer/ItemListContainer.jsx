@@ -1,15 +1,17 @@
-import { useEffect, useContext, useState } from "react";
+import { useContext } from "react";
+import { Box, Typography } from "@mui/material";
+
 import { CommerceContext } from '../../context/CommerceContext'
 import ItemListCard from "../ItemListCard/ItemListCard";
 import './ItemListContainer.css';
+
 
 function ItemListContainer({ products }) {
   const { state, dispatch } = useContext(CommerceContext);
 
   const handleAddProduct = (product) => {
-    debugger;
     const id = product.id
-    const newState = {...state.productsSelected};
+    const newState = { ...state.productsSelected };
     if (newState[id]) {
       newState[id].count += 1
     } else {
@@ -21,19 +23,21 @@ function ItemListContainer({ products }) {
     dispatch({ type: 'SET_PRODUCTS_SELECTED', payload: newState });
   }
 
-  const handleFavorite = (id) => {
+  const handleFavorite = (productSelected) => {
     let newState = [...state.productsFavorites];
-    if (state.productsFavorites.includes(id)) {
-      newState = newState.filter((favoriteId) => favoriteId != id)
+    const existingIndex = state.productsFavorites.findIndex((product) => product.id == productSelected.id)
+    if (existingIndex !== -1) {
+      newState = newState.splice(1, existingIndex)
     } else {
-      newState.push(id)
+      newState.push(productSelected)
     }
 
     dispatch({ type: 'SET_PRODUCTS_FAVORITES', payload: newState });
   }
 
   const setFavorite = (id) => {
-    if (state.productsFavorites.includes(id)) {
+    const existingIndex = state.productsFavorites.findIndex((product) => product.id == id)
+    if (existingIndex !== -1) {
       return true
     } else {
       return false
@@ -44,18 +48,40 @@ function ItemListContainer({ products }) {
   return (
     <>
       <div className="products-grid">
-        {products.map(product => {
-          return (
+        {products.length > 0 ? (
+          products.map((product) => (
             <ItemListCard
-              key={product.id} product={product}
+              key={product.id}
+              product={product}
               handleAddProduct={(product) => handleAddProduct(product)}
-              handleFavorite={(id) => handleFavorite(id)}
-              isFavorite={setFavorite(product.id)} />
-          );
-        })}
+              handleFavorite={(product) => handleFavorite(product)}
+              isFavorite={setFavorite(product.id)}
+            />
+          ))
+        ) : (
+          <Box
+            sx={{
+              display: 'inline-flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '300px'
+            }}
+          >
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              sx={{ fontWeight: 'bold' }}
+            >
+              Sorry! There are no products here!
+            </Typography>
+          </Box>
+        )}
       </div>
     </>
-  )
+  );
 }
 
 export default ItemListContainer
