@@ -1,12 +1,11 @@
 # fakeStore-react
-Project description goes here.
 
-Table of Contents
-Installation
-Usage
-Pages
+### Table of Contents
+- Installation
+- Usage
+- Pages
 
-To run the project, follow these steps:
+### To run the project, follow these steps:
 
 Clone the repository.
 
@@ -16,23 +15,23 @@ Run the following command to install the dependencies:
 
 npm install
 
-Usage
+### Usage
 To start the development server and run the project, use the following command:
 
 npm run dev
 
-Pages
+### Pages
 The project includes the following pages:
 
-HomePage
+#### HomePage
 
 The HomePage is the initial page of the project. It provides an overview and introduction to the project.
 
-ShopPage
+#### ShopPage
 
 The ShopPage displays all available products for purchase. If a category is provided as a parameter in the URL, the products can be filtered by category.
 
-FavoritesPage
+#### FavoritesPage
 
 The FavoritesPage displays the products that have been selected as favorites. From this page, users can add the favorite products to their cart.
 
