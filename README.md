@@ -42,3 +42,11 @@ The DetailPage provides detailed information about a specific product, including
 CheckoutPage
 
 The CheckoutPage allows users to complete their purchase. It provides the option to edit the products in the cart before finalizing the transaction.
+
+<img width="1280" alt="fakestore-4" src="https://github.com/micaf/fakeStore-react/assets/45270860/c1abea70-7033-44f6-b078-4a9c8abc8ddb">
+
+<img width="1254" alt="fakestore-3" src="https://github.com/micaf/fakeStore-react/assets/45270860/fc32b130-8d2f-4b13-8780-a2540e46e218">
+
+<img width="1247" alt="fakestore-2" src="https://github.com/micaf/fakeStore-react/assets/45270860/1f1b2ae5-f5a3-4a44-b9b4-1fc8ff504c8e">
+
+<img width="1255" alt="fakestore-1" src="https://github.com/micaf/fakeStore-react/assets/45270860/a32551c9-7ff3-4992-a9eb-67e8085e2065">
